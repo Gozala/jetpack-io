@@ -1,4 +1,6 @@
-{ "name": "fs",
+{
+  "name": "fs",
+  "id": "fs",
   "version": "0.0.1",
   "description": "NodeJS filesystem API",
   "keywords": [],
