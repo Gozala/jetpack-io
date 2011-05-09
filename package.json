@@ -2,16 +2,16 @@
   "name": "io",
   "id": "io",
   "version": "0.0.1",
-  "description": "NodeJS filesystem API",
-  "keywords": [ "node", "io", "fs", "async" ],
+  "description": "NodeJS style IO for jetpack",
+  "keywords": [ "node", "io", "fs", "async", "jetpack" ],
   "author": "Irakli Gozalishvili <rfobic@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git://github.com/Gozala/io.git",
-    "web": "https://github.com/Gozala/io"
+    "url": "https://github.com/Gozala/jetpack-io.git",
+    "web": "https://github.com/Gozala/jetpack-io"
   },
   "bugs": {
-    "web": "http://github.com/Gozala/io/issues/"
+    "web": "https://github.com/Gozala/jetpack-io/issues/"
   },
   "directories": {
     "doc": "./docs",
