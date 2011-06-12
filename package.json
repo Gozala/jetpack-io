@@ -13,11 +13,8 @@
   "bugs": {
     "web": "https://github.com/Gozala/jetpack-io/issues/"
   },
-  "directories": {
-    "doc": "./docs",
-    "lib": "./lib",
-    "test": "./test"
-  },
+  "directories": { "lib": "./" },
+  "main": "./io.js",
   "devDependencies": {
     "test": ">=0.0.10"
   },
