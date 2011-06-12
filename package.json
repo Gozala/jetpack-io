@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "description": "NodeJS style IO for jetpack",
   "keywords": [ "node", "io", "fs", "async", "jetpack" ],
-  "author": "Irakli Gozalishvili <rfobic@gmail.com>",
+  "author": "Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com/)",
   "repository": {
     "type": "git",
     "url": "https://github.com/Gozala/jetpack-io.git",
