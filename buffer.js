@@ -5,7 +5,7 @@
 
 "use strict";
 
-const { Extendable } = require("./extendables");
+const { Extendable } = require('https!raw.github.com/Gozala/extendables/v0.2.0/extendables.js');
 const { Cc, Ci, components: { Constructor: CC } } = require("chrome");
 const Transcoder = CC("@mozilla.org/intl/scriptableunicodeconverter",
                       "nsIScriptableUnicodeConverter");

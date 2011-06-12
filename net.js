@@ -3,10 +3,10 @@
 const { Cc, Ci, components: { Constructor: CC } } = require("chrome");
 
 const { DuplexStream, InputStream, OutputStream } = require("./stream");
-const { EventEmitter } = require("./events");
+const { EventEmitter } = require("https!raw.github.com/Gozala/events/v0.2.0/events");
 const { Buffer } = require("./buffer");
 // `Namespace` declared by E4X so `const` fails.
-let { Namespace } = require("./namespace");
+let { Namespace } = require("https!raw.github.com/Gozala/namespace/v0.1.0/namespace.js");
 const _ = new Namespace();
 
 

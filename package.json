@@ -16,7 +16,11 @@
   "directories": { "lib": "./" },
   "main": "./io.js",
   "devDependencies": {
-    "test": ">=0.0.10"
+    "test": ">=0.0.10",
+    "graphquire": ">=0.6.1"
+  },
+  "scripts": {
+    "install": "graphquire --write --clean --cache-path ./"
   },
   "licenses": [{
     "type": "MIT",
