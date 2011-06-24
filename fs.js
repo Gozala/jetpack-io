@@ -146,7 +146,7 @@ const WriteStream = OutputStream.extend({
     if ('position' in options && options.position !== undefined)
       this.position = options.position;
 
-    let { position } = this;
+    let { position, flags, mode } = this;
     // If pass was passed we create a file descriptor out of it. Otherwise
     // we just use given file descriptor.
     let { output } = _(isString(path) ? openSync(path, flags, mode) : path);
@@ -171,7 +171,7 @@ const WriteStream = OutputStream.extend({
     });
   },
   drainable: true,
-  flags: 'r',
+  flags: 'w',
   position: -1,
   mode: FILE_PERMISSION
 });
