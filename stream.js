@@ -2,11 +2,11 @@
 
 "use strict";
 
-const { EventEmitter } = require("https!raw.github.com/Gozala/events/v0.2.0/events");
+const { EventEmitter } = require("https://raw.github.com/Gozala/events/v0.3.0/events.js");
 const { Buffer } = require("./buffer");
 const { setTimeout } = require("timer");
 // `Namespace` declared by E4X so `const` fails.
-let { Namespace } = require("https!raw.github.com/Gozala/namespace/v0.1.0/namespace.js");
+let { Namespace } = require("https://raw.github.com/Gozala/namespace/v0.1.0/namespace.js");
 
 function isFunction(value) { return typeof value === "function"; }
 const _ = new Namespace();

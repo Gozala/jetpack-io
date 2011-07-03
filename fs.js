@@ -6,9 +6,9 @@ const { Cc, Ci, components: { Constructor: CC } } = require("chrome");
 const { setTimeout } = require("timer");
 const { Stream, InputStream, OutputStream } = require("./stream");
 const { Buffer } = require("./buffer");
-const { Extendable } = require('https!raw.github.com/Gozala/extendables/v0.2.0/extendables.js');
+const { Extendable } = require('https://raw.github.com/Gozala/extendables/v0.2.0/extendables.js');
 // `Namespace` declared by E4X so `const` fails.
-let { Namespace } = require("https!raw.github.com/Gozala/namespace/v0.1.0/namespace.js");
+let { Namespace } = require("https://raw.github.com/Gozala/namespace/v0.1.0/namespace.js");
 
 
 const RawFile = CC("@mozilla.org/file/local;1", "nsILocalFile",
