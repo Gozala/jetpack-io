@@ -17,10 +17,10 @@
   "main": "./io.js",
   "devDependencies": {
     "test": ">=0.0.10",
-    "graphquire": ">=0.6.1"
+    "graphquire": ">=0.7.0"
   },
   "scripts": {
-    "install": "graphquire --write --clean --cache-path ./"
+    "install": "graphquire --write --clean --escape --cache-path ./"
   },
   "licenses": [{
     "type": "MIT",

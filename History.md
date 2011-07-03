@@ -1,5 +1,9 @@
 # History #
 
+## 0.2.0 / 2011-07-03 ##
+
+ - Switch to using real URLs in require.
+
 ## 0.1.0 / 2011-06-29 ##
 
   - Improving readme.
