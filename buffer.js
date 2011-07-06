@@ -46,6 +46,9 @@ var Buffer = Extendable.extend({
     transcoder.charset = String(encoding || this.encoding).toUpperCase();
     return transcoder.convertFromByteArray(bytes, this.length);
   },
+  toJSON: function toJSON() {
+    return this.toString()
+  },
   write: function write(string, offset, encoding) {
     offset = Math.max(offset || 0, 0);
     let value = this.valueOf();
