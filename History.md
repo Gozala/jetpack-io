@@ -1,5 +1,9 @@
 # History #
 
+## 0.2.1 / 2011-07-07 ##
+
+  - JSON.stringify on buffer returns it's string representation.
+
 ## 0.2.0 / 2011-07-03 ##
 
  - Switch to using real URLs in require.
