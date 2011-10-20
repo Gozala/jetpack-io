@@ -25,8 +25,8 @@ const StreamPump = CC("@mozilla.org/network/input-stream-pump;1",
                       "nsIInputStreamPump", "init");
 
 const { createOutputTransport, createInputTransport } =
-  CC("@mozilla.org/network/stream-transport-service;1",
-     "nsIStreamTransportService")();
+  Cc['@mozilla.org/network/stream-transport-service;1']
+     .getService(Ci.nsIStreamTransportService);
 
 
 const { REOPEN_ON_REWIND, DEFER_OPEN } = Ci.nsIFileInputStream;

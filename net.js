@@ -13,8 +13,10 @@ const _ = new Namespace();
 const RawSocketServer = CC("@mozilla.org/network/server-socket;1",
                         "nsIServerSocket");
 
-const { createTransport } = CC("@mozilla.org/network/socket-transport-service;1",
-                           "nsISocketTransportService")();
+const { createTransport } = 
+  Cc['@mozilla.org/network/socket-transport-service;1']
+    .getService(Ci.nsISocketTransportService);
+    
 const StreamPump = CC("@mozilla.org/network/input-stream-pump;1",
                       "nsIInputStreamPump", "init");
 const StreamCopier = CC("@mozilla.org/network/async-stream-copier;1",
