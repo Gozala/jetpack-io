@@ -608,7 +608,7 @@ exports.writeFile = function writeFile(path, content, encoding, callback) {
   try {
     if (isFunction(encoding)) {
       callback = encoding
-      encoding = callback
+      encoding = null
     }
     if (isString(content))
       content = new Buffer(content, encoding);
