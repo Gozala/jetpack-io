@@ -1,7 +1,7 @@
 {
   "name": "io",
   "id": "io",
-  "version": "0.2.1",
+  "version": "0.4.0",
   "description": "NodeJS style IO for jetpack",
   "keywords": [ "node", "io", "fs", "async", "jetpack" ],
   "author": "Irakli Gozalishvili <rfobic@gmail.com> (http://jeditoolkit.com/)",
