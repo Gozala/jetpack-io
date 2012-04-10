@@ -141,7 +141,8 @@ const InputStream = Stream.extend({
   paused: false,
   get status() { return _(this).pump.status; },
   read: function read() {
-    let [ stream, { input, pump } ] = [ this, _(this) ];
+    let stream = this;
+    let { input, pump } = _(this);
     pump.asyncRead({
       onStartRequest: function onStartRequest() { stream.emit('start'); },
       onDataAvailable: function onDataAvailable(req, c, is, offset, count) {
@@ -197,8 +198,10 @@ const OutputStream = Stream.extend({
     let { asyncOutputStream, output, drain, close } = _(this);
     let stream = this;
 
-    if (isFunction(encoding))
-      [ callback, encoding ] = [ encoding, callback ];
+    if (isFunction(encoding)) {
+      callback = encoding;
+      encoding = callback;
+    }
 
     // Flag indicating whether or not content has been flushed to the kernel
     // buffer.
@@ -229,10 +232,14 @@ const OutputStream = Stream.extend({
     _(this).output.flush();
   },
   end: function end(content, encoding, callback) {
-    if (isFunction(content))
-      [ callback, content ] = [ content, callback ];
-    if (isFunction(encoding))
-      [ callback, encoding ] = [ encoding, callback ];
+    if (isFunction(content)) {
+      callback = content
+      content = callback
+    }
+    if (isFunction(encoding)) {
+      callback = encoding
+      encoding = callback
+    }
 
     // Setting a listener to 'close' event if passed.
     if (isFunction(callback))
