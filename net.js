@@ -1,6 +1,6 @@
 'use strict';
 
-const { Cc, Ci, components: { Constructor: CC } } = require('chrome');
+const { Cc, Ci, CC } = require('chrome');
 
 const { DuplexStream, InputStream, OutputStream } = require('./stream');
 const { EventEmitter } = require('raw.github.com/Gozala/events/v0.5.0/events');
@@ -9,11 +9,10 @@ const { ns } = require('api-utils/namespace');
 const _ = ns();
 
 
+const { createTransport } = Cc['@mozilla.org/network/socket-transport-service;1'].
+                            getService(Ci.nsISocketTransportService);
 const RawSocketServer = CC('@mozilla.org/network/server-socket;1',
                         'nsIServerSocket');
-
-const { createTransport } = CC('@mozilla.org/network/socket-transport-service;1',
-                           'nsISocketTransportService')();
 const StreamPump = CC('@mozilla.org/network/input-stream-pump;1',
                       'nsIInputStreamPump', 'init');
 const StreamCopier = CC('@mozilla.org/network/async-stream-copier;1',
@@ -149,7 +148,7 @@ const Socket = DuplexStream.extend({
     _(this).transport.setTimeout(time, TIMEOUT_READ_WRITE);
   },
   open: function open(fd, type) {
-    throw new Error('Not yet implemented');
+    throw Error('Not yet implemented');
   },
   connect: function connect (port, host) {
     try {
@@ -216,17 +215,19 @@ const Server = EventEmitter.extend({
     return this.host + ':' + this.port;
   },
   listenFD: function listenFD(fd, type) {
-    throw new Error('Not implemented');
+    throw Error('Not implemented');
   },
   listen: function listen(port, host, callback) {
     let server = this;
     let connections = 0;
 
     if (this.fd)
-      throw new Error('Server already opened');
+      throw Error('Server already opened');
 
-    if (!callback)
-      [ host, callback ] = [ 'localhost', callback ]
+    if (!callback) {
+      callback = host
+      host = 'localhost'
+    }
 
     if (callback)
       this.on('listening', callback)
@@ -262,7 +263,7 @@ const Server = EventEmitter.extend({
     }
   },
   pause: function pause(time) {
-    throw new Error('Net implemented');
+    throw Error('Net implemented');
   },
   /**
    * Stops the server from accepting new connections. This function is

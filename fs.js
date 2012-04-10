@@ -23,8 +23,8 @@ const StreamPump = CC('@mozilla.org/network/input-stream-pump;1',
                       'nsIInputStreamPump', 'init');
 
 const { createOutputTransport, createInputTransport } =
-  CC('@mozilla.org/network/stream-transport-service;1',
-     'nsIStreamTransportService')();
+  Cc['@mozilla.org/network/stream-transport-service;1'].
+  getService(Ci.nsIStreamTransportService);
 
 
 const { REOPEN_ON_REWIND, DEFER_OPEN } = Ci.nsIFileInputStream;
@@ -87,7 +87,7 @@ function Mode(mode, fallback) {
 }
 function Flags(flag) {
   return !isString(flag) ? flag :
-         FLAGS[flag] || new Error('Unknown file open flag: ' + flag);
+         FLAGS[flag] || Error('Unknown file open flag: ' + flag);
 }
 
 const ReadStream = InputStream.extend({
@@ -299,7 +299,7 @@ exports.truncate = Async(exports.truncateSync);
  * Synchronous chmod(2).
  */
 exports.chmodSync = function chmodSync (path, mode) {
-  throw new Error('Not implemented yet!!');
+  throw Error('Not implemented yet!!');
 };
 /**
  * Asynchronous chmod(2). No arguments other than a possible exception are
@@ -349,7 +349,7 @@ exports.fstat = Async(exports.fstatSync);
  * Synchronous link(2).
  */
 exports.linkSync = function linkSync(source, target) {
-  throw new Error('Not implemented yet!!');
+  throw Error('Not implemented yet!!');
 };
 /**
  * Asynchronous link(2). No arguments other than a possible exception are given
@@ -361,7 +361,7 @@ exports.link = Async(exports.linkSync);
  * Synchronous symlink(2).
  */
 exports.symlinkSync = function symlinkSync(source, target) {
-  throw new Error('Not implemented yet!!');
+  throw Error('Not implemented yet!!');
 };
 /**
  * Asynchronous symlink(2). No arguments other than a possible exception are
@@ -489,7 +489,7 @@ exports.open = Async(exports.openSync);
  * written.
  */
 exports.writeSync = function writeSync(fd, buffer, offset, length, position) {
-  throw new Error('Not implemented');
+  throw Error('Not implemented');
 };
 /**
  * Write buffer to the file specified by fd.
@@ -514,7 +514,7 @@ exports.write = function write(fd, buffer, offset, length, position, callback) {
     buffer = new Buffer(String(buffer), encoding);
     offset = 0;
   } else if (length + offset > buffer.length) {
-    throw new Error('Length is extends beyond buffer');
+    throw Error('Length is extends beyond buffer');
   } else if (length + offset !== buffer.length) {
     buffer = buffer.slice(offset, offset + length);
   }
@@ -533,7 +533,7 @@ exports.write = function write(fd, buffer, offset, length, position, callback) {
  * bytes read.
  */
 exports.readSync = function readSync(fd, buffer, offset, length, position) {
-  throw new Error('Not implemented');
+  throw Error('Not implemented');
 };
 /**
  * Read data from the file specified by `fd`.
@@ -571,8 +571,10 @@ exports.read = function read(fd, buffer, offset, length, position, callback) {
  * contents of the file.
  */
 exports.readFile = function readFile(path, encoding, callback) {
-  if (isFunction(encoding))
-    [ callback, encoding ] = [ encoding, null ];
+  if (isFunction(encoding)) {
+    callback = encoding
+    encoding = null
+  }
 
   let buffer = new Buffer();
   let readStream = new ReadStream(path);
@@ -595,7 +597,7 @@ exports.readFile = function readFile(path, encoding, callback) {
  * Otherwise it returns a buffer.
  */
 exports.readFileSync = function readFileSync(path, encoding) {
-  throw new Error('Not implemented');
+  throw Error('Not implemented');
 };
 
 /**
@@ -604,8 +606,10 @@ exports.readFileSync = function readFileSync(path, encoding) {
  */
 exports.writeFile = function writeFile(path, content, encoding, callback) {
   try {
-    if (isFunction(encoding))
-      [ callback, encoding ] = [ encoding, null ];
+    if (isFunction(encoding)) {
+      callback = encoding
+      encoding = callback
+    }
     if (isString(content))
       content = new Buffer(content, encoding);
 
@@ -626,7 +630,7 @@ exports.writeFile = function writeFile(path, content, encoding, callback) {
  * The synchronous version of `fs.writeFile`.
  */
 exports.writeFileSync = function writeFileSync(filename, data, encoding) {
-  throw new Error('Not implemented');
+  throw Error('Not implemented');
 };
 
 /**
@@ -638,5 +642,5 @@ exports.writeFileSync = function writeFileSync(filename, data, encoding) {
  * in milliseconds. The default is { persistent: true, interval: 0 }.
  */
 exports.watchFile = function watchFile(path, options, listener) {
-  throw new Error('Not implemented');
+  throw Error('Not implemented');
 };

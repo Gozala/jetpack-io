@@ -205,7 +205,7 @@ const OutputStream = Stream.extend({
     let isWritten = false;
     // If stream is not writable we throw an error.
     if (!stream.writable)
-      throw new Error('stream not writable');
+      throw Error('stream not writable');
 
     try {
       // If content is not a buffer then we create one out of it.
