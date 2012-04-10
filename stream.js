@@ -1,15 +1,14 @@
 /* vim:set ts=2 sw=2 sts=2 expandtab */
 
-"use strict";
+'use strict';
 
-const { EventEmitter } = require("https://raw.github.com/Gozala/events/v0.3.0/events.js");
-const { Buffer } = require("./buffer");
-const { setTimeout } = require("timer");
-// `Namespace` declared by E4X so `const` fails.
-let { Namespace } = require("https://raw.github.com/Gozala/namespace/v0.1.0/namespace.js");
+const { EventEmitter } = require('raw.github.com/Gozala/events/v0.5.0/events');
+const { Buffer } = require('./buffer');
+const { setTimeout } = require('timer');
+const { ns } = require('api-utils/namespace');
 
-function isFunction(value) { return typeof value === "function"; }
-const _ = new Namespace();
+function isFunction(value) { return typeof value === 'function'; }
+const _ = ns();
 
 /**
  * Utility function / hack that we use to figure if output stream is closed.
@@ -90,41 +89,41 @@ const Stream = EventEmitter.extend({
     }
 
     function cleanup() {
-      source.removeListener("data", onData);
-      target.removeListener("drain", onDrain);
-      source.removeListener("end", onEnd);
+      source.removeListener('data', onData);
+      target.removeListener('drain', onDrain);
+      source.removeListener('end', onEnd);
 
-      target.removeListener("pause", onPause);
-      target.removeListener("resume", onResume);
+      target.removeListener('pause', onPause);
+      target.removeListener('resume', onResume);
 
-      source.removeListener("end", cleanup);
-      source.removeListener("close", cleanup);
+      source.removeListener('end', cleanup);
+      source.removeListener('close', cleanup);
 
-      target.removeListener("end", cleanup);
-      target.removeListener("close", cleanup);
+      target.removeListener('end', cleanup);
+      target.removeListener('close', cleanup);
     }
 
     if (!options || options.end !== false)
-      target.on("end", onEnd);
+      target.on('end', onEnd);
 
-    source.on("data", onData);
-    target.on("drain", onDrain);
-    target.on("resume", onResume);
-    target.on("pause", onPause);
+    source.on('data', onData);
+    target.on('drain', onDrain);
+    target.on('resume', onResume);
+    target.on('pause', onPause);
 
-    source.on("end", cleanup);
-    source.on("close", cleanup);
+    source.on('end', cleanup);
+    source.on('close', cleanup);
 
-    target.on("end", cleanup);
-    target.on("close", cleanup);
+    target.on('end', cleanup);
+    target.on('close', cleanup);
 
-    target.emit("pipe", source);
+    target.emit('pipe', source);
   },
   pause: function pause() {
-    this.emit("pause");
+    this.emit('pause');
   },
   resume: function resume() {
-    this.emit("resume");
+    this.emit('resume');
   },
   destroySoon: function destroySoon() {
     this.destroy();
@@ -144,42 +143,42 @@ const InputStream = Stream.extend({
   read: function read() {
     let [ stream, { input, pump } ] = [ this, _(this) ];
     pump.asyncRead({
-      onStartRequest: function onStartRequest() { stream.emit("start"); },
+      onStartRequest: function onStartRequest() { stream.emit('start'); },
       onDataAvailable: function onDataAvailable(req, c, is, offset, count) {
         try {
           let bytes = input.readByteArray(count);
-          stream.emit("data", new Buffer(bytes, stream.encoding));
+          stream.emit('data', new Buffer(bytes, stream.encoding));
         } catch (error) {
-          stream.emit("error", error);
+          stream.emit('error', error);
           stream.readable = false;
         }
       },
       onStopRequest: function onStopRequest() {
         stream.readable = false;
-        stream.emit("end");
+        stream.emit('end');
       }
     }, null);
   },
   pause: function pause() {
     this.paused = true;
     _(this).pump.suspend();
-    this.emit("paused");
+    this.emit('paused');
   },
   resume: function resume() {
     this.paused = false;
     _(this).pump.resume();
-    this.emit("resume");
+    this.emit('resume');
   },
   destroy: function destroy() {
     this.readable = false;
     try {
-      this.emit("close", null);
+      this.emit('close', null);
       _(this).pump.cancel(null);
       delete _(this).pump;
       _(this).input.close();
       delete _(this).input;
     } catch (error) {
-      this.emit("error", error);
+      this.emit('error', error);
     }
   }
 });
@@ -190,8 +189,8 @@ const OutputStream = Stream.extend({
     let { output, asyncOutputStream } = options;
     _(this).output = output;
     _(this).asyncOutputStream = asyncOutputStream;
-    _(this).drain = this.emit.bind(this, "drain");
-    _(this).close = this.emit.bind(this, "close");
+    _(this).drain = this.emit.bind(this, 'drain');
+    _(this).close = this.emit.bind(this, 'close');
   },
   writable: true,
   write: function write(content, encoding, callback) {
@@ -218,12 +217,12 @@ const OutputStream = Stream.extend({
       output.writeByteArray(content.valueOf(), content.length);
       output.flush();
 
-      if (callback) this.once("drain", callback);
+      if (callback) this.once('drain', callback);
       onStateChange(asyncOutputStream, drain, close);
       return true;
     } catch (error) {
       // If errors occur we emit appropriate event.
-      stream.emit("error", error);
+      stream.emit('error', error);
     }
   },
   flush: function flush() {
@@ -235,9 +234,9 @@ const OutputStream = Stream.extend({
     if (isFunction(encoding))
       [ callback, encoding ] = [ encoding, callback ];
 
-    // Setting a listener to "close" event if passed.
+    // Setting a listener to 'close' event if passed.
     if (isFunction(callback))
-      this.once("close", callback);
+      this.once('close', callback);
 
     // If content is passed then we defer closing until we finish with writing.
     if (content)
@@ -252,7 +251,7 @@ const OutputStream = Stream.extend({
       delete _(this).output;
       this._events = null;
     } catch (error) {
-      this.emit("error", error);
+      this.emit('error', error);
     }
   }
 });
@@ -278,7 +277,7 @@ const DuplexStream = Stream.extend({
 
   destroy: function destroy(error) {
     if (error)
-      this.emit("error", error);
+      this.emit('error', error);
     InputStream.prototype.destroy.call(this);
     OutputStream.prototype.destroy.call(this);
   }

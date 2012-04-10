@@ -1,39 +1,37 @@
 /* vim:set ts=2 sw=2 sts=2 expandtab */
-"use strict";
+'use strict';
 
-const { Cc, Ci, components: { Constructor: CC } } = require("chrome");
+const { Cc, Ci, CC } = require('chrome');
 
-const { setTimeout } = require("timer");
-const { Stream, InputStream, OutputStream } = require("./stream");
-const { Buffer } = require("./buffer");
-const { Extendable } = require('https://raw.github.com/Gozala/extendables/v0.2.0/extendables.js');
-// `Namespace` declared by E4X so `const` fails.
-let { Namespace } = require("https://raw.github.com/Gozala/namespace/v0.1.0/namespace.js");
+const { setTimeout } = require('timer');
+const { Stream, InputStream, OutputStream } = require('./stream');
+const { Buffer } = require('./buffer');
+const { ns } = require('api-utils/namespace');
+const { Extendable } = require('raw.github.com/Gozala/extendables/v0.2.0/extendables');
 
-
-const RawFile = CC("@mozilla.org/file/local;1", "nsILocalFile",
-                          "initWithPath");
-const FileOutputStream = CC("@mozilla.org/network/file-output-stream;1",
-                            "nsIFileOutputStream", "init");
-const FileInputStream = CC("@mozilla.org/network/file-input-stream;1",
-                           "nsIFileInputStream", "init");
-const BinaryInputStream = CC("@mozilla.org/binaryinputstream;1",
-                             "nsIBinaryInputStream", "setInputStream");
-const BinaryOutputStream = CC("@mozilla.org/binaryoutputstream;1",
-                              "nsIBinaryOutputStream", "setOutputStream");
-const StreamPump = CC("@mozilla.org/network/input-stream-pump;1",
-                      "nsIInputStreamPump", "init");
+const RawFile = CC('@mozilla.org/file/local;1', 'nsILocalFile',
+                          'initWithPath');
+const FileOutputStream = CC('@mozilla.org/network/file-output-stream;1',
+                            'nsIFileOutputStream', 'init');
+const FileInputStream = CC('@mozilla.org/network/file-input-stream;1',
+                           'nsIFileInputStream', 'init');
+const BinaryInputStream = CC('@mozilla.org/binaryinputstream;1',
+                             'nsIBinaryInputStream', 'setInputStream');
+const BinaryOutputStream = CC('@mozilla.org/binaryoutputstream;1',
+                              'nsIBinaryOutputStream', 'setOutputStream');
+const StreamPump = CC('@mozilla.org/network/input-stream-pump;1',
+                      'nsIInputStreamPump', 'init');
 
 const { createOutputTransport, createInputTransport } =
-  CC("@mozilla.org/network/stream-transport-service;1",
-     "nsIStreamTransportService")();
+  CC('@mozilla.org/network/stream-transport-service;1',
+     'nsIStreamTransportService')();
 
 
 const { REOPEN_ON_REWIND, DEFER_OPEN } = Ci.nsIFileInputStream;
 const { DIRECTORY_TYPE, NORMAL_FILE_TYPE } = Ci.nsIFile;
 const { NS_SEEK_SET, NS_SEEK_CUR, NS_SEEK_END } = Ci.nsISeekableStream;
 
-const FILE_PERMISSION = parseInt("0666", 8);
+const FILE_PERMISSION = parseInt('0666', 8);
 const PR_UINT32_MAX = 0xfffffff;
 // Values taken from:
 // http://mxr.mozilla.org/mozilla-central/source/nsprpub/pr/include/prio.h#615
@@ -47,21 +45,21 @@ const PR_SYNC =         0x40;
 const PR_EXCL =         0x80;
 
 const FLAGS = {
-  "r":                  PR_RDONLY,
-  "r+":                 PR_RDWR,
-  "w":                  PR_CREATE_FILE | PR_TRUNCATE | PR_WRONLY,
-  "w+":                 PR_CREATE_FILE | PR_TRUNCATE | PR_RDWR,
-  "a":                  PR_APPEND | PR_CREATE_FILE | PR_WRONLY,
-  "a+":                 PR_APPEND | PR_CREATE_FILE | PR_RDWR
+  'r':                  PR_RDONLY,
+  'r+':                 PR_RDWR,
+  'w':                  PR_CREATE_FILE | PR_TRUNCATE | PR_WRONLY,
+  'w+':                 PR_CREATE_FILE | PR_TRUNCATE | PR_RDWR,
+  'a':                  PR_APPEND | PR_CREATE_FILE | PR_WRONLY,
+  'a+':                 PR_APPEND | PR_CREATE_FILE | PR_RDWR
 };
 
-const _ = new Namespace();
+const _ = ns();
 
 function isWritable(mode) { return !!(mode & PR_WRONLY || mode & PR_RDWR); }
 function isReadable(mode) { return !!(mode & PR_RDONLY || mode & PR_RDWR); }
 
-function isString(value) { return typeof value === "string"; }
-function isFunction(value) { return typeof value === "function"; }
+function isString(value) { return typeof value === 'string'; }
+function isFunction(value) { return typeof value === 'function'; }
 
 function toArray(enumerator) {
   let value = [];
@@ -301,7 +299,7 @@ exports.truncate = Async(exports.truncateSync);
  * Synchronous chmod(2).
  */
 exports.chmodSync = function chmodSync (path, mode) {
-  throw new Error("Not implemented yet!!");
+  throw new Error('Not implemented yet!!');
 };
 /**
  * Asynchronous chmod(2). No arguments other than a possible exception are
@@ -351,7 +349,7 @@ exports.fstat = Async(exports.fstatSync);
  * Synchronous link(2).
  */
 exports.linkSync = function linkSync(source, target) {
-  throw new Error("Not implemented yet!!");
+  throw new Error('Not implemented yet!!');
 };
 /**
  * Asynchronous link(2). No arguments other than a possible exception are given
@@ -363,7 +361,7 @@ exports.link = Async(exports.linkSync);
  * Synchronous symlink(2).
  */
 exports.symlinkSync = function symlinkSync(source, target) {
-  throw new Error("Not implemented yet!!");
+  throw new Error('Not implemented yet!!');
 };
 /**
  * Asynchronous symlink(2). No arguments other than a possible exception are
@@ -491,7 +489,7 @@ exports.open = Async(exports.openSync);
  * written.
  */
 exports.writeSync = function writeSync(fd, buffer, offset, length, position) {
-  throw new Error("Not implemented");
+  throw new Error('Not implemented');
 };
 /**
  * Write buffer to the file specified by fd.
@@ -516,13 +514,13 @@ exports.write = function write(fd, buffer, offset, length, position, callback) {
     buffer = new Buffer(String(buffer), encoding);
     offset = 0;
   } else if (length + offset > buffer.length) {
-    throw new Error("Length is extends beyond buffer");
+    throw new Error('Length is extends beyond buffer');
   } else if (length + offset !== buffer.length) {
     buffer = buffer.slice(offset, offset + length);
   }
 
   let writeStream = new WriteStream(fd, { position: position, length: length });
-  writeStream.on("error", callback);
+  writeStream.on('error', callback);
   writeStream.write(buffer, function onEnd() {
     writeStream.destroy();
     if (callback)
@@ -535,7 +533,7 @@ exports.write = function write(fd, buffer, offset, length, position, callback) {
  * bytes read.
  */
 exports.readSync = function readSync(fd, buffer, offset, length, position) {
-  throw new Error("Not implemented");
+  throw new Error('Not implemented');
 };
 /**
  * Read data from the file specified by `fd`.
@@ -557,11 +555,11 @@ exports.read = function read(fd, buffer, offset, length, position, callback) {
   }
   let bytesRead = 0;
   let readStream = new ReadStream(fd, { position: position, length: length });
-  readStream.on("data", function onData(chunck) {
+  readStream.on('data', function onData(chunck) {
       chunck.copy(buffer, offset + bytesRead);
       bytesRead += buffer.length;
   });
-  readStream.on("end", function onEnd() {
+  readStream.on('end', function onEnd() {
     callback(null, bytesRead, buffer);
     readStream.destroy();
   });
@@ -578,14 +576,14 @@ exports.readFile = function readFile(path, encoding, callback) {
 
   let buffer = new Buffer();
   let readStream = new ReadStream(path);
-  readStream.on("data", function(chunck) {
+  readStream.on('data', function(chunck) {
     chunck.copy(buffer, buffer.length);
   });
-  readStream.on("error", function onError(error) {
+  readStream.on('error', function onError(error) {
     callback(error);
     readStream.destroy();
   });
-  readStream.on("end", function onEnd() {
+  readStream.on('end', function onEnd() {
     callback(null, buffer);
     readStream.destroy();
   });
@@ -597,7 +595,7 @@ exports.readFile = function readFile(path, encoding, callback) {
  * Otherwise it returns a buffer.
  */
 exports.readFileSync = function readFileSync(path, encoding) {
-  throw new Error("Not implemented");
+  throw new Error('Not implemented');
 };
 
 /**
@@ -612,7 +610,7 @@ exports.writeFile = function writeFile(path, content, encoding, callback) {
       content = new Buffer(content, encoding);
 
     let writeStream = new WriteStream(path);
-    writeStream.on("error", function onError(error) {
+    writeStream.on('error', function onError(error) {
       callback(error);
       writeStream.destroy();
     });
@@ -628,7 +626,7 @@ exports.writeFile = function writeFile(path, content, encoding, callback) {
  * The synchronous version of `fs.writeFile`.
  */
 exports.writeFileSync = function writeFileSync(filename, data, encoding) {
-  throw new Error("Not implemented");
+  throw new Error('Not implemented');
 };
 
 /**
@@ -640,5 +638,5 @@ exports.writeFileSync = function writeFileSync(filename, data, encoding) {
  * in milliseconds. The default is { persistent: true, interval: 0 }.
  */
 exports.watchFile = function watchFile(path, options, listener) {
-  throw new Error("Not implemented");
+  throw new Error('Not implemented');
 };

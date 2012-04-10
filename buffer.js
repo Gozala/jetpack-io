@@ -3,12 +3,12 @@
          forin: true latedef: false supernew: true */
 /*global define: true */
 
-"use strict";
+'use strict';
 
-const { Extendable } = require('https://raw.github.com/Gozala/extendables/v0.2.0/extendables.js');
-const { Cc, Ci, components: { Constructor: CC } } = require("chrome");
-const Transcoder = CC("@mozilla.org/intl/scriptableunicodeconverter",
-                      "nsIScriptableUnicodeConverter");
+const { Extendable } = require('raw.github.com/Gozala/extendables/v0.2.0/extendables');
+const { Cc, Ci, CC } = require('chrome');
+const Transcoder = CC('@mozilla.org/intl/scriptableunicodeconverter',
+                      'nsIScriptableUnicodeConverter');
 
 var Buffer = Extendable.extend({
   constructor: function Buffer(subject, encoding) {

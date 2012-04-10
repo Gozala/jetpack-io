@@ -1,28 +1,27 @@
-"use strict";
+'use strict';
 
-const { Cc, Ci, components: { Constructor: CC } } = require("chrome");
+const { Cc, Ci, components: { Constructor: CC } } = require('chrome');
 
-const { DuplexStream, InputStream, OutputStream } = require("./stream");
-const { EventEmitter } = require("https://raw.github.com/Gozala/events/v0.3.0/events.js");
-const { Buffer } = require("./buffer");
-// `Namespace` declared by E4X so `const` fails.
-let { Namespace } = require("https://raw.github.com/Gozala/namespace/v0.1.0/namespace.js");
-const _ = new Namespace();
+const { DuplexStream, InputStream, OutputStream } = require('./stream');
+const { EventEmitter } = require('raw.github.com/Gozala/events/v0.5.0/events');
+const { Buffer } = require('./buffer');
+const { ns } = require('api-utils/namespace');
+const _ = ns();
 
 
-const RawSocketServer = CC("@mozilla.org/network/server-socket;1",
-                        "nsIServerSocket");
+const RawSocketServer = CC('@mozilla.org/network/server-socket;1',
+                        'nsIServerSocket');
 
-const { createTransport } = CC("@mozilla.org/network/socket-transport-service;1",
-                           "nsISocketTransportService")();
-const StreamPump = CC("@mozilla.org/network/input-stream-pump;1",
-                      "nsIInputStreamPump", "init");
-const StreamCopier = CC("@mozilla.org/network/async-stream-copier;1",
-                        "nsIAsyncStreamCopier", "init");
-const BinaryInputStream = CC("@mozilla.org/binaryinputstream;1",
-                             "nsIBinaryInputStream", "setInputStream");
-const BinaryOutputStream = CC("@mozilla.org/binaryoutputstream;1",
-                              "nsIBinaryOutputStream", "setOutputStream");
+const { createTransport } = CC('@mozilla.org/network/socket-transport-service;1',
+                           'nsISocketTransportService')();
+const StreamPump = CC('@mozilla.org/network/input-stream-pump;1',
+                      'nsIInputStreamPump', 'init');
+const StreamCopier = CC('@mozilla.org/network/async-stream-copier;1',
+                        'nsIAsyncStreamCopier', 'init');
+const BinaryInputStream = CC('@mozilla.org/binaryinputstream;1',
+                             'nsIBinaryInputStream', 'setInputStream');
+const BinaryOutputStream = CC('@mozilla.org/binaryoutputstream;1',
+                              'nsIBinaryOutputStream', 'setOutputStream');
 
 const {
   STATUS_RESOLVING, STATUS_CONNECTING_TO,
@@ -51,15 +50,15 @@ function onStatus(socket, transport, previous) {
       case CONNECTING:
         break;
       case OPEN:
-        socket.emit("connect");
+        socket.emit('connect');
         break;
       case WRITE:
-        socket.emit("end");
+        socket.emit('end');
         break;
       case READ:
         break;
       case CLOSED:
-        socket.emit("close")
+        socket.emit('close')
         break;
     }
   }
@@ -145,7 +144,7 @@ const Socket = DuplexStream.extend({
   },
   setTimeout: function setTimeout(time, callback) {
     if (callback)
-      this.once("timeout", callback);
+      this.once('timeout', callback);
 
     _(this).transport.setTimeout(time, TIMEOUT_READ_WRITE);
   },
@@ -183,17 +182,17 @@ const Server = EventEmitter.extend({
        return new Server(options, listener);
 
     options = options || {};
-    if ("loopbackOnly" in options)
+    if ('loopbackOnly' in options)
       this.loopbackOnly = !!options.loopbackOnly;
-    if ("maxConnections" in options)
+    if ('maxConnections' in options)
       this.maxConnections = options.maxConnections;
-    if ("connections" in options)
+    if ('connections' in options)
       this.connections = options.connections;
 
     _(this).rawServer = RawSocketServer();
 
     if (listener)
-      this.on("connection", listener);
+      this.on('connection', listener);
 
   },
   type: null,
@@ -214,10 +213,10 @@ const Server = EventEmitter.extend({
    * address.
    */
   address: function address() {
-    return this.host + ":" + this.port;
+    return this.host + ':' + this.port;
   },
   listenFD: function listenFD(fd, type) {
-    throw new Error("Not implemented");
+    throw new Error('Not implemented');
   },
   listen: function listen(port, host, callback) {
     let server = this;
@@ -227,10 +226,10 @@ const Server = EventEmitter.extend({
       throw new Error('Server already opened');
 
     if (!callback)
-      [ host, callback ] = [ "localhost", callback ]
+      [ host, callback ] = [ 'localhost', callback ]
 
     if (callback)
-      this.on("listening", callback)
+      this.on('listening', callback)
 
     if (isPort(port)) {
       this.type = 'tcp'
@@ -247,39 +246,39 @@ const Server = EventEmitter.extend({
             server.connections = ++ connections;
             server.emit('connection', socket);
           } catch (error) {
-            server.emit("error", error);
+            server.emit('error', error);
           }
         },
         onStopListening: function onDisconnect(rawServer, status) {
           try {
             server.emit('close');
           } catch (error) {
-            server.emit("error", error)
+            server.emit('error', error)
           }
         }
       });
 
-      this.emit("listening");
+      this.emit('listening');
     }
   },
   pause: function pause(time) {
-    throw new Error("Net implemented");
+    throw new Error('Net implemented');
   },
   /**
    * Stops the server from accepting new connections. This function is
    * asynchronous, the server is finally closed when the server emits a
-   * `"close"` event.
+   * `'close'` event.
    */
   close: function close() {
-    this.removeAllListeners("connection")
-    this.removeAllListeners("error")
-    this.removeAllListeners("listening")
+    this.removeAllListeners('connection')
+    this.removeAllListeners('error')
+    this.removeAllListeners('listening')
     _(this).rawServer.close();
   },
   destroy: function destroy(error) {
     this.close();
     if (error)
-      this.emit("error", error);
+      this.emit('error', error);
     delete _(this).rawServer;
   }
 });
