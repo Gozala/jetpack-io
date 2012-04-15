@@ -8,11 +8,12 @@ exports._connectionListener = connectionListener;
 const Server = net.Server.extend({
   constructor: function Server(requestListener) {
     if (!(this instanceof Server)) return new Server(requestListener);
-  }
-  net.Server.call(this, {}, connectionListener);
+    
+    net.Server.call(this, {}, connectionListener);
 
-  if (requestListener) {
-    this.addListener('request', requestListener);
+    if (requestListener) {
+      this.addListener('request', requestListener);
+    }
   }
 });
 exports.Server = Server;
