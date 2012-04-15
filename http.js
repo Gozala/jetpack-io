@@ -12,7 +12,7 @@ const Server = net.Server.extend({
     net.Server.call(this, {}, connectionListener);
 
     if (requestListener) {
-      this.addListener('request', requestListener);
+      this.on('request', requestListener);
     }
   }
 });
