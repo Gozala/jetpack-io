@@ -1,3 +1,6 @@
+# This is in process of being intergrated into SDK:
+https://github.com/mozilla/addon-sdk/pull/646
+
 # fs #
 
 NodeJS filesystem API for Jetpack.
